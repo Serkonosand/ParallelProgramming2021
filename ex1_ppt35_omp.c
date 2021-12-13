@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 
-N = 8;
+int N = 8;
 
 int main(){
     int step,logN;

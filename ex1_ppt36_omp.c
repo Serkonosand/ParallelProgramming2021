@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 
-N = 8;
+int N = 8;
 
 int  main(){
     int step,logN;
@@ -12,30 +12,33 @@ int  main(){
         num[i] = i+1;
     }
     logN = (int)log2(N);
-    int pid, tmp;
+    int pid, tmp, dest;
     printf("numbers:");
     for (int i = 0; i < N; i++)
     {
-        printf("%d", &num[i]);
+        printf("%d ", num[i]);
         if(i == N-1)
             printf("\n");
     }
     for (int i = 0; i < logN; i++)
     {
         step = (int)pow(2, i);
-#pragma omp parallel private(pid, tmp)
+#pragma omp parallel private(pid, tmp, dest)
         {
             pid = omp_get_thread_num();
             tmp = num[pid];
-            if (pid + step < step*2)
-            {
-                tmp = num[pid] + num[pid+step];
-            }
-            else{
-                tmp = num[pid] + num[pid-step];
-            }
+            dest = pid^step;
+            tmp = num[pid] + num[dest];
+#pragma omp barrier
             num[pid] = tmp;
 #pragma omp barrier
         }
+    }
+    printf("after sum:");
+    for (int i = 0; i < N; i++)
+    {
+        printf("%d ", num[i]);
+        if(i == N-1)
+            printf("\n");
     }
 }

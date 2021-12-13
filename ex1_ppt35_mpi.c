@@ -7,8 +7,8 @@ int main(int argc, char *argv[])
 {
     int pid, pnums;
     MPI_Init(&argc, &argv);
-    MPI_comm_rank(MPI_COMM_WORLD, &pid);
-    MPI_comm_size(MPI_COMM_WORLD, &pnums);
+    MPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    MPI_Comm_size(MPI_COMM_WORLD, &pnums);
     int data, recvdata, logN;
     MPI_Status status;
     data = pid+1;
@@ -25,13 +25,13 @@ int main(int argc, char *argv[])
             MPI_Recv(&recvdata, 1, MPI_INT, pid+step/2, tag, MPI_COMM_WORLD, &status);
             data += recvdata;
         }
-        else
+        else if(pid % step == step/2)
         {
             MPI_Send(&data, 1, MPI_INT, pid-step/2, tag, MPI_COMM_WORLD);
         }
     }
     //spread
-    for (int i = logN; i >0; i++)
+    for (int i = logN; i >0; i--)
     {
         int tag = i;
         int step = (int)pow(2, i);
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
         {
             MPI_Send(&data, 1, MPI_INT, pid+step/2, tag, MPI_COMM_WORLD);
         }
-        else
+        else if(pid % step == step/2)
         {
             MPI_Recv(&recvdata, 1, MPI_INT, pid-step/2, tag, MPI_COMM_WORLD, &status);
             data = recvdata;
