@@ -25,7 +25,8 @@ int main(int argc, char *argv[])
             MPI_Recv(&recvdata, 1, MPI_INT, pid+step/2, tag, MPI_COMM_WORLD, &status);
             data += recvdata;
         }
-        else if(pid % step == step/2)
+        else
+         if(pid % step == step/2)
         {
             MPI_Send(&data, 1, MPI_INT, pid-step/2, tag, MPI_COMM_WORLD);
         }
@@ -39,7 +40,8 @@ int main(int argc, char *argv[])
         {
             MPI_Send(&data, 1, MPI_INT, pid+step/2, tag, MPI_COMM_WORLD);
         }
-        else if(pid % step == step/2)
+        else
+        if(pid % step == step/2)
         {
             MPI_Recv(&recvdata, 1, MPI_INT, pid-step/2, tag, MPI_COMM_WORLD, &status);
             data = recvdata;
