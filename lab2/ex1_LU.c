@@ -52,6 +52,7 @@ int main(int argc, char * argv[])
                 A(i,j) = (float)(rand() % 25 + 1);
             }
         }
+        time = MPI_Wtime();
         
     }
     MPI_Bcast(&M,1,MPI_INT,0,MPI_COMM_WORLD);
@@ -68,7 +69,6 @@ int main(int argc, char * argv[])
     }
  
     if (a==NULL) fatal("allocate error\n");
-    time = MPI_Wtime();
     if (my_rank==0)
     {
         for(i=0;i<m;i++)
@@ -178,7 +178,6 @@ int main(int argc, char * argv[])
                 A((j*p+i),k)=a(j,k);
         }
     }
-    time = MPI_Wtime() - time;
     if (my_rank==0)
     {
             for(i=0;i<M;i++)
@@ -212,6 +211,7 @@ int main(int argc, char * argv[])
                    u(i,j)=A(i,j);
             }
         }
+        time = MPI_Wtime() - time;
         printf("Input matrix:\n");
         printf("%d\t %d\n",M, N);
         for(i=0;i<M;i++)

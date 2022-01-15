@@ -69,7 +69,7 @@ int main(){
             c = A(j, j)/sq;
             s = A(i, j)/sq;
             int k ;
-#pragma omp parallel for shared(c, s, Ai, Aj, Qi, Qj, A, Q, i, j) private(k)
+#pragma omp parallel for private(k)
             for (k = 0; k < N; k++)
             {
                 Aj[k] = c * A(j, k) + s * A(i, k);
@@ -78,7 +78,7 @@ int main(){
                 Qi[k] = - s * Q(j, k) + c * Q(i, k);
             }
 #pragma omp barrier
-#pragma omp parallel for shared(A, Q, Qj, Qi, Aj, Ai, i, j) private(k)
+#pragma omp parallel for private(k)
             for (k = 0; k < N; k++)
             {
                 A(j, k) = Aj[k];
