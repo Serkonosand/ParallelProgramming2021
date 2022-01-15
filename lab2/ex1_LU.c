@@ -9,8 +9,7 @@
 #define floatsize sizeof(float)
 #define intsize sizeof(int)
 
-int M = 5;
-int N;
+int M;
 int m;
 float * A;
 int my_rank;
@@ -35,6 +34,9 @@ int main(int argc, char * argv[])
     int i1, i2;
     int v,w;
     float *a, *f, *l, *u;
+    printf("Input matrix row length:\n");
+    scanf("%d", &M);
+    doubel time;
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &group_size);
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
@@ -66,7 +68,7 @@ int main(int argc, char * argv[])
     }
  
     if (a==NULL) fatal("allocate error\n");
- 
+    time = MPI_Wtime();
     if (my_rank==0)
     {
         for(i=0;i<m;i++)
@@ -176,7 +178,7 @@ int main(int argc, char * argv[])
                 A((j*p+i),k)=a(j,k);
         }
     }
- 
+    time = MPI_Wtime() - time;
     if (my_rank==0)
     {
             for(i=0;i<M;i++)
@@ -210,7 +212,7 @@ int main(int argc, char * argv[])
                    u(i,j)=A(i,j);
             }
         }
-        printf("Input of file \"dataIn.txt\"\n");
+        printf("Input matrix:\n");
         printf("%d\t %d\n",M, N);
         for(i=0;i<M;i++)
         {
@@ -233,6 +235,7 @@ int main(int argc, char * argv[])
                 printf("%f\t",u(i,j));
             printf("\n");
         }
+        printf("total time: %f\n", time);
     }
     MPI_Finalize();
     Env_Fin(a,f);
